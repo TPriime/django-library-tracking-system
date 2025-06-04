@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -35,11 +36,16 @@ class Member(models.Model):
     def __str__(self):
         return self.user.username
 
+
+def default_date():
+    return datetime.date.today() + datetime.timedelta(days=14)
+
 class Loan(models.Model):
     book = models.ForeignKey(Book, related_name='loans', on_delete=models.CASCADE)
     member = models.ForeignKey(Member, related_name='loans', on_delete=models.CASCADE)
     loan_date = models.DateField(auto_now_add=True)
     return_date = models.DateField(null=True, blank=True)
+    due_date = models.DateField(default=default_date)
     is_returned = models.BooleanField(default=False)
 
     def __str__(self):
